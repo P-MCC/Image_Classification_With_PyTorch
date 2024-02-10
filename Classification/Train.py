@@ -3,8 +3,6 @@ import torch.optim as optim
 import torch.nn as nn
 from torch.utils.data import DataLoader
 import matplotlib.pyplot as plt
-import numpy as np
-from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 from CustomDataLoader import PlayingCardDataset
 from Model import AlexNet
