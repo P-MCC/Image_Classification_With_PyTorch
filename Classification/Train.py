@@ -10,6 +10,7 @@ from torchvision import transforms
 import os
 from datetime import datetime
 
+
 # Paths to data directories
 data_path = 'M:/Datasets/Playing_Card'
 train_dir = '/train'
