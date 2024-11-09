@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 from torchvision.datasets import ImageFolder
 from PIL import Image
 
+
 class PlayingCardDataset(Dataset):
     """
     A custom dataset class for loading playing card images from a directory.
