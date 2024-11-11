@@ -84,14 +84,3 @@ class PlayingCardDataset(Dataset):
         except Exception as e:
             print("Could not retrieve image size:", e)
             return None
-    
-# transform = transforms.Compose([
-#     transforms.Resize((128, 128)),  # Resize images to 128x128 pixels
-#     transforms.ToTensor()           # Convert images to PyTorch tensors
-# ])    
-# dataset = PlayingCardDataset(data_dir="M:/Datasets/Playing_Card", transform=transform)
-# image, label = dataset[100]
-
-# # Check the shape of the retrieved image tensor
-# image_shape = image.shape
-# print(image_shape)
