@@ -21,8 +21,8 @@ valid_dataset = PlayingCardDataset(data_dir=data_path + valid_dir, transform=Tru
 
 
 # Create data loaders
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-valid_loader = DataLoader(valid_dataset, batch_size=32, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+valid_loader = DataLoader(valid_dataset, batch_size=16, shuffle=False)
 
 
 # Model initialization
@@ -40,9 +40,11 @@ model.to(device)
 num_epochs = 15
 train_losses = []
 train_accuracies = []
-
+valid_losses = []
+valid_accuracies = []
 
 for epoch in range(num_epochs):
+    # Training phase
     model.train()
     running_train_loss = 0.0
     correct_train = 0
@@ -66,6 +68,56 @@ for epoch in range(num_epochs):
     train_losses.append(avg_train_loss)
     train_accuracies.append(train_accuracy)
 
-    print(f'Epoch [{epoch + 1}/{num_epochs}], Train Loss: {avg_train_loss:.4f}, Train Acc: {train_accuracy:.4f}')
+    # Validation phase
+    model.eval()
+    running_valid_loss = 0.0
+    correct_valid = 0
+    total_valid = 0
 
-print('Training complete')
+    with torch.no_grad():
+        for images, labels in valid_loader:
+            images, labels = images.to(device), labels.to(device)
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+
+            running_valid_loss += loss.item()
+            _, predicted = torch.max(outputs, 1)
+            correct_valid += (predicted == labels).sum().item()
+            total_valid += labels.size(0)
+
+    avg_valid_loss = running_valid_loss / len(valid_loader)
+    valid_accuracy = correct_valid / total_valid
+    valid_losses.append(avg_valid_loss)
+    valid_accuracies.append(valid_accuracy)
+
+    print(f'Epoch [{epoch + 1}/{num_epochs}], Train Loss: {avg_train_loss:.4f}, Train Acc: {train_accuracy:.4f}, '
+          f'Valid Loss: {avg_valid_loss:.4f}, Valid Acc: {valid_accuracy:.4f}')
+
+print('Training and validation complete')
+
+
+import matplotlib.pyplot as plt
+
+# Plotting the training and validation loss
+plt.figure(figsize=(12, 5))
+
+# Loss subplot
+plt.subplot(1, 2, 1)
+plt.plot(train_losses, label='Training Loss', color='blue')
+plt.plot(valid_losses, label='Validation Loss', color='orange')
+plt.title('Training and Validation Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+
+# Accuracy subplot
+plt.subplot(1, 2, 2)
+plt.plot(train_accuracies, label='Training Accuracy', color='blue')
+plt.plot(valid_accuracies, label='Validation Accuracy', color='orange')
+plt.title('Training and Validation Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
