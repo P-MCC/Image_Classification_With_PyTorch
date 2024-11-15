@@ -7,29 +7,35 @@ import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 from CustomDataLoader import PlayingCardDataset
-from Model import SimpleCNN
+from Model import SimpleCNN, AlexNet
+from torchvision import transforms
 
 # Paths to data directories
 data_path = 'M:/Datasets/Playing_Card'
 train_dir = '/train'
 valid_dir = '/valid'
 
+# Define a set of transformations to apply to the images
+transform = transforms.Compose([
+    transforms.Resize((227, 227)),  # Resize images to 227x227 pixels
+    transforms.ToTensor()           # Convert images to PyTorch tensors
+])
 
 # Load datasets
-train_dataset = PlayingCardDataset(data_dir=data_path + train_dir, transform=True)
-valid_dataset = PlayingCardDataset(data_dir=data_path + valid_dir, transform=True)
+train_dataset = PlayingCardDataset(data_dir=data_path + train_dir, transform=transform)
+valid_dataset = PlayingCardDataset(data_dir=data_path + valid_dir, transform=transform)
 
 
 # Create data loaders
-train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
-valid_loader = DataLoader(valid_dataset, batch_size=16, shuffle=False)
+train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
+valid_loader = DataLoader(valid_dataset, batch_size=8, shuffle=False)
 
 
 # Model initialization
 num_classes = len(train_dataset.classes)
-model = SimpleCNN(num_classes=num_classes)
+model = AlexNet(num_classes=num_classes)
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)
+optimizer = optim.Adam(model.parameters(), lr=0.0005, weight_decay=1e-4)
 
 # Move model to device (GPU/CPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -37,7 +43,7 @@ print(f"Device: {device}")
 model.to(device)
 
 # Training loop with validation
-num_epochs = 15
+num_epochs = 25
 train_losses = []
 train_accuracies = []
 valid_losses = []

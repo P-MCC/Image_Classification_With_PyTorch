@@ -5,35 +5,40 @@ from PIL import Image
 
 class PlayingCardDataset(Dataset):
     """
-    A custom dataset class for loading playing card images from a directory with optional transformations.
+    A custom dataset class for loading playing card images from a directory.
+
+    Args:
+        data_dir (str): The path to the dataset directory containing images organized in subfolders.
+        transform (callable, optional): A function/transform to apply to the images (e.g., data augmentation, normalization).
+
+    Attributes:
+        data (ImageFolder): A torchvision ImageFolder dataset object.
+        transform (callable): A transform to be applied to the images during data loading.
     """
-    def __init__(self, data_dir, transform=False):
+
+    def __init__(self, data_dir, transform=None):
         """
         Initializes the dataset by loading images from the given directory using ImageFolder.
 
         Args:
             data_dir (str): Path to the root directory containing the dataset.
-            use_transform (bool): If True, applies default transformations to the images.
+            transform (callable, optional): Optional transform to be applied on a sample.
         """
-        # Default transformations if use_transform is True
-        if transform:
-            self.transform = transforms.Compose([
-                transforms.Resize((128, 128)),
-                transforms.ToTensor()
-            ])
-        else:
-            self.transform = None
-
-        # Initialize ImageFolder with the data directory
-        self.data = ImageFolder(data_dir)
-
+        # Initialize the dataset using ImageFolder from torchvision
+        self.data = ImageFolder(data_dir, transform=transform)
+    
     def __len__(self):
-        """Returns the total number of images in the dataset."""
+        """
+        Returns the total number of images in the dataset.
+        
+        Returns:
+            int: Number of images in the dataset.
+        """
         return len(self.data)
-
+    
     def __getitem__(self, idx):
         """
-        Fetches the image and its label by index and applies the transform if provided.
+        Fetches the image and its label by index.
 
         Args:
             idx (int): The index of the image to retrieve.
@@ -41,38 +46,52 @@ class PlayingCardDataset(Dataset):
         Returns:
             tuple: (image, label) where image is a tensor and label is an integer.
         """
-        image, label = self.data[idx]
-
-        # Apply the transformation if it's set
-        if self.transform:
-            image = self.transform(image)
-
-        return image, label
+        return self.data[idx]
 
     @property
     def classes(self):
-        """Returns the list of class labels."""
+        """
+        Returns the list of class labels.
+
+        Returns:
+            list: List of class names.
+        """
         return self.data.classes
 
     @property
     def class_to_idx(self):
-        """Returns the class-to-index mapping."""
+        """
+        Returns the class-to-index mapping.
+
+        Returns:
+            dict: A dictionary mapping class names to indices.
+        """
         return self.data.class_to_idx
 
     @property
     def img_size(self):
-        """Returns the size of the images in the dataset."""
+        """
+        Returns the size of the images in the dataset.
+
+        Returns:
+            tuple: (width, height) of the images.
+        """
+        # Try getting image size from the first image in the dataset
         try:
             image_path, _ = self.data.imgs[0]
             with Image.open(image_path) as img:
-                return img.size  # (width, height)
+                return img.size  # Returns (width, height)
         except Exception as e:
             print("Could not retrieve image size:", e)
             return None
-        
-dataset = PlayingCardDataset(data_dir="M:/Datasets/Playing_Card", transform=True)
-image, label = dataset[100]
+    
+# transform = transforms.Compose([
+#     transforms.Resize((128, 128)),  # Resize images to 128x128 pixels
+#     transforms.ToTensor()           # Convert images to PyTorch tensors
+# ])    
+# dataset = PlayingCardDataset(data_dir="M:/Datasets/Playing_Card", transform=transform)
+# image, label = dataset[100]
 
-# Check the shape of the retrieved image tensor
-image_shape = image.shape
-print(image_shape)
+# # Check the shape of the retrieved image tensor
+# image_shape = image.shape
+# print(image_shape)
