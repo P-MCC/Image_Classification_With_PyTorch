@@ -7,8 +7,10 @@ import numpy as np
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 from CustomDataLoader import PlayingCardDataset
-from Model import SimpleCNN, AlexNet
+from Model import AlexNet
 from torchvision import transforms
+import os
+from datetime import datetime
 
 # Paths to data directories
 data_path = 'M:/Datasets/Playing_Card'
@@ -43,7 +45,7 @@ print(f"Device: {device}")
 model.to(device)
 
 # Training loop with validation
-num_epochs = 25
+num_epochs = 50
 train_losses = []
 train_accuracies = []
 valid_losses = []
@@ -127,3 +129,20 @@ plt.legend()
 
 plt.tight_layout()
 plt.show()
+
+
+# Function to save the model
+def save_model(model, directory='./Models'):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    current_time = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    filename = f'{directory}/AlexNet_{current_time}.pth'
+    torch.save(model.state_dict(), filename)
+    print(f'Model saved to {filename}')
+
+# Prompt to ask if you want to save the model
+save_prompt = input("Do you want to save the trained model? (yes/no): ").strip().lower()
+if save_prompt == 'yes':
+    save_model(model)
+else:
+    print("Model not saved.")
