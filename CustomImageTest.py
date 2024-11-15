@@ -45,7 +45,7 @@ def predict_custom_image(model, image_path, transform, class_names):
     print(f'Predicted Class: {class_names[predicted_class.item()]}')
 
 # Replace with the path to your custom image
-image_path = './Dataset/x-23.jpg'  # e.g., 'M:/Datasets/Playing_Card/test/custom_image.jpg'
+image_path = './Dataset/9_of_diamonds.jpg'  # e.g., 'M:/Datasets/Playing_Card/test/custom_image.jpg'
 class_names = PlayingCardDataset(data_dir=data_path).classes
 
 # Run the prediction
