@@ -15,7 +15,7 @@ This deep learning project focuses on classifying images of playing cards, utili
 
 **Validation Methods** :
 
-* Validation was performed with Holdout-Validation Method at the end of each epoch using the **validation dataset** to calculate loss and accuracy.
+* Validation was performed with Hold-Out Validation Method at the end of each epoch using the **validation dataset** to calculate loss and accuracy.
 * It employs a **simple train-validation split** where the training and validation sets are predefined and separate. The training loop iterates through the `train_loader`, and after each epoch, the model is evaluated on the `valid_loader` to measure validation loss and accuracy.
 
 ### Results:
