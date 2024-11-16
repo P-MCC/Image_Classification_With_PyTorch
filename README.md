@@ -26,13 +26,14 @@ This deep learning project focuses on classifying images of playing cards, utili
 
 **Testing results:**
 
-Test Accuracy: 0.8830
+Test Accuracy: ***0.8830***
 Classification Report:
-                          precision   recall   f1-score   support
 
-    accuracy                                         0.88       265
-    macro avg            0.91      0.88      0.88       265
-    weighted avg       0.91      0.88      0.88       265
+|              | precision | recall | f1-score | support |
+| ------------ | --------- | ------ | -------- | ------- |
+| accuracy     |           |        | 0.88     | 265     |
+| macro avg    | 0.91      | 0.88   | 0.88     | 265     |
+| weighted avg | 0.91      | 0.88   | 0.88     | 265     |
 
 Confusion Matrix 
 
